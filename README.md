@@ -26,4 +26,4 @@ Make sure you have Node.js installed on your machine.
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/rawichblue/Nuxt3-TS-Template.git
+   git clone https://github.com/rawichblue/template-nuxt3-ts.git
