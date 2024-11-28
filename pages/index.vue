@@ -1,36 +1,46 @@
 <template>
-  <div>
-    <ModalLoading :loading="loading" />
-    {{ i18n.t('page.register.title') }}
-    <div class="md:flex hidden">
-      <div
-        v-for="(item, index) in locales"
-        :key="index"
-        class="flex gap-2 items-center justify-center cursor-pointer"
-        @click="store.openModalLange = !store.openModalLange"
-      >
-        <template v-if="item.code === locale">
-          <img
-            class="w-11 h-9 bg-cover rounded-full"
-            :src="item.path_image"
-            :alt="item.name"
-            @click="setLocale(item.code)"
-          />
-        </template>
-      </div>
-    </div>
-  </div>
+  <div>home</div>
+
+  <!-- <button @click="getCustomerList()" class="bg-red-500 p-5 rounded-md">
+    click meeee
+  </button> -->
+  <!-- <pre>{{ em }}</pre> -->
 </template>
 
 <script setup lang="ts">
+import service from '~/service'
 import { useIndexStore } from '~/store/main'
+
 definePageMeta({
-  // middleware: 'auth',
+  middleware: 'auth',
 })
+
 const store = useIndexStore()
-const i18n = useI18n()
-const { locales, locale, setLocale }: any = useI18n()
 const loading = ref<boolean>(false)
+const em = ref([])
+interface testList {
+  page: number
+  size: number
+  search: string
+}
+const test = ref<testList>({
+  page: 1,
+  size: 10,
+  search: '',
+})
+
+const getCustomerList = async () => {
+  await service.employee
+    .getEmployeeList(test.value)
+    .then((resp: any) => {
+      const { data, paginate } = resp.data
+      em.value = data
+    })
+    .catch((err: any) => {
+      errorResp(err.response)
+    })
+    .finally(() => {})
+}
 </script>
 
 <style scoped></style>

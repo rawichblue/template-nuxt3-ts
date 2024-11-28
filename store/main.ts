@@ -2,7 +2,9 @@ import { defineStore } from 'pinia'
 
 interface State {
   token: string | null
-  openModalLange: boolean 
+  openModalLange: boolean
+  openSidebar: boolean
+  openPopupProfile: boolean
   roles: []
   system: []
   permissions: []
@@ -10,8 +12,10 @@ interface State {
 
 export const useIndexStore = defineStore('index', {
   state: (): State => ({
-    token: null, 
+    token: null,
     openModalLange: false,
+    openSidebar: false,
+    openPopupProfile: false,
     roles: [],
     system: [],
     permissions: [],

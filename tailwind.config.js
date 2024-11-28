@@ -11,11 +11,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#1570EF',
-        secondary: '#E9E9E9',
+        primary: '#0b0e15',
+        secondary: '#181b22',
         danger: '#ef4444',
         success: '#51C671',
         disable: '#858D9D',
+        orange: '#eb6e1a',
       },
       fontFamily: {
         // montserrat: ['Montserrat', 'sans-serif'],
@@ -25,4 +26,3 @@ export default {
   },
   plugins: ['@tailwindcss/forms'],
 }
-
