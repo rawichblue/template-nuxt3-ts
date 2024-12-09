@@ -10,3 +10,10 @@ export const login = (payload: FormLogin) => {
     },
   })
 }
+
+export const getUserInfo = () => {
+  return client({
+    url: `auth/getInfo`,
+    method: 'get',
+  })
+}

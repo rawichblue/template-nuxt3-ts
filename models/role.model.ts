@@ -6,7 +6,10 @@ export interface GetRoleList {
 }
 
 export interface RoleList {
-  test: string
+  ID: string
+  Name: string
+  Description: string
+  IsActived: boolean
 }
 
 export interface Paginate {
@@ -19,4 +22,15 @@ export interface QueryRoleList {
   page: number
   size: number
   search: string
+}
+
+export interface CreateUpdateRole {
+  name: string
+  description: string
+  is_actived: boolean
+}
+
+export interface SetPermission {
+  role_id: string
+  permission_ids: number[]
 }

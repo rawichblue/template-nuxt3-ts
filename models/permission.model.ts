@@ -6,7 +6,11 @@ export interface GetPermissionList {
 }
 
 export interface PermissionList {
-  test: string
+  Id: number
+  IsActive: boolean
+  Name: string
+  Group: string
+  Description: string
 }
 
 export interface Paginate {
@@ -19,4 +23,11 @@ export interface QueryPermissionList {
   page: number
   size: number
   search: string
+}
+
+export interface CreatePermission {
+  IsActive: boolean
+  Name: string
+  Group: string
+  Description: string
 }

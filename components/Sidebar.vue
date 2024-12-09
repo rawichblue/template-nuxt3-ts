@@ -103,6 +103,7 @@
 
 <script setup lang="ts">
 import { useIndexStore } from '~/store/main'
+const i18n = useI18n()
 
 export interface MenuSidebar {
   icon: string
@@ -134,7 +135,7 @@ const store = useIndexStore()
 const menus = ref<MenuSidebar[]>([
   {
     icon: 'mage:dashboard-plus-fill',
-    name: 'Dashbord',
+    name: i18n.t('cmp.sidebar.dashbord'),
     path: '/',
     active: false,
     permission: '',
@@ -142,7 +143,7 @@ const menus = ref<MenuSidebar[]>([
   },
   {
     icon: 'mdi:account-filter',
-    name: 'Employee',
+    name: i18n.t('cmp.sidebar.employee'),
     path: '/employee',
     active: false,
     permission: '',
@@ -150,7 +151,7 @@ const menus = ref<MenuSidebar[]>([
   },
   {
     icon: 'heroicons:building-storefront-solid',
-    name: 'Product',
+    name: i18n.t('cmp.sidebar.product'),
     path: '/product',
     active: false,
     permission: 'vendor-check-slip-get',
@@ -158,14 +159,14 @@ const menus = ref<MenuSidebar[]>([
   },
   {
     icon: 'mdi:cog',
-    name: 'Setting',
+    name: i18n.t('cmp.sidebar.setting'),
     path: '',
     active: false,
     permission: 'system-get',
     subMenu: [
       {
         icon: 'mdi:human-handsup',
-        name: 'Role',
+        name: i18n.t('cmp.sidebar.role'),
         path: '/setting/role',
         active: false,
         permission: 'role-get',
@@ -173,7 +174,7 @@ const menus = ref<MenuSidebar[]>([
       },
       {
         icon: 'material-symbols:shield-locked-rounded',
-        name: 'Permission',
+        name: i18n.t('cmp.sidebar.permission'),
         path: '/setting/permission',
         active: false,
         permission: 'permission-get',
@@ -228,6 +229,60 @@ const checkMenus = (name: any) => {
     })
   }
 }
+
+watchEffect(() => {
+  menus.value = [
+    {
+      icon: 'mage:dashboard-plus-fill',
+      name: i18n.t('cmp.sidebar.dashbord'),
+      path: '/',
+      active: false,
+      permission: '',
+      subMenu: [],
+    },
+    {
+      icon: 'mdi:account-filter',
+      name: i18n.t('cmp.sidebar.employee'),
+      path: '/employee',
+      active: false,
+      permission: '',
+      subMenu: [],
+    },
+    {
+      icon: 'heroicons:building-storefront-solid',
+      name: i18n.t('cmp.sidebar.product'),
+      path: '/product',
+      active: false,
+      permission: 'vendor-check-slip-get',
+      subMenu: [],
+    },
+    {
+      icon: 'mdi:cog',
+      name: i18n.t('cmp.sidebar.setting'),
+      path: '',
+      active: false,
+      permission: 'system-get',
+      subMenu: [
+        {
+          icon: 'mdi:human-handsup',
+          name: i18n.t('cmp.sidebar.role'),
+          path: '/setting/role',
+          active: false,
+          permission: 'role-get',
+          children: [],
+        },
+        {
+          icon: 'material-symbols:shield-locked-rounded',
+          name: i18n.t('cmp.sidebar.permission'),
+          path: '/setting/permission',
+          active: false,
+          permission: 'permission-get',
+          children: [],
+        },
+      ],
+    },
+  ]
+})
 </script>
 
 <style scoped>

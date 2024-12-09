@@ -20,7 +20,11 @@ export default defineNuxtConfig({
   },
   compatibilityDate: '2024-04-03',
   modules: ['@nuxtjs/tailwindcss', '@nuxt/icon', '@pinia/nuxt', '@nuxtjs/i18n'],
-  css: ['~/assets/css/main.css', '~/assets/scss/main.scss'],
+  css: [
+    '~/assets/css/main.css',
+    '~/assets/scss/main.scss',
+    'vue-multiselect/dist/vue-multiselect.css',
+  ],
   i18n: {
     lazy: true,
     langDir: 'locales',

@@ -1,5 +1,8 @@
 <template>
-  <div class="min-h-screen"><slot />aaa</div>
+  <div class="min-h-screen">
+    <ModalLange class="text-gray-300" />
+    <slot />
+  </div>
 </template>
 
 <script setup lang="ts"></script>

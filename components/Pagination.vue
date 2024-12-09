@@ -11,7 +11,7 @@
       <div class="mr-2">Display</div>
       <select
         v-model="perPage"
-        class="cursor-pointer hover:bg-white/5 w-12 mr-2 text-xs h-7 rounded-lg"
+        class="cursor-pointer hover:bg-white/5 w-12 mr-2 text-xs text-center h-7 rounded-lg bg-[#282d39]"
         @change="setLimit()"
       >
         <option

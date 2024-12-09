@@ -1,15 +1,15 @@
 <template>
   <div class="flex items-center justify-between">
-    <div class="font-bold text-lg">Permission</div>
+    <div class="font-bold text-lg">Role</div>
 
     <div>
-      <!-- <button
+      <button
         @click="openModal"
         class="p-2 bg-green-600 hover:bg-green-700 rounded-md flex justify-center items-center"
       >
         <Icon name="material-symbols:add" />
         <p class="ms-2">Add</p>
-      </button> -->
+      </button>
     </div>
   </div>
 
@@ -27,7 +27,7 @@
                 <Icon name="ic:round-search" class="text-2xl text-gray-400" />
               </div>
               <input
-                v-model="getPermissionList.query.search"
+                v-model="getRoleList.query.search"
                 @keyup="searchText()"
                 class="p-2 ps-10 text-sm rounded-md border bg-gray-800 border-gray-700 text-white focus:border-gray-500 focus:outline-none"
                 placeholder="Search..."
@@ -51,14 +51,15 @@
                 <tr class="text-sm whitespace-nowrap">
                   <th class="px-6 py-3">#</th>
                   <th class="px-6 py-3 text-start">Name</th>
-                  <th class="px-6 py-3 text-start">Group</th>
+                  <th class="px-6 py-3 text-start">Description</th>
                   <th class="px-6 py-3 text-center">Active</th>
+                  <th class="px-6 py-3 text-center">Set Permission</th>
                   <th class="px-6 py-3">Setting</th>
                 </tr>
               </thead>
 
               <tbody
-                v-for="(items, i) in getPermissionList.datas"
+                v-for="(items, i) in getRoleList.datas"
                 :key="i"
                 class="divide-y divide-inherit"
               >
@@ -66,8 +67,7 @@
                   <td class="whitespace-nowrap">
                     <div class="flex justify-center items-center text-sm px-5">
                       {{
-                        (getPermissionList.query.page - 1) *
-                          getPermissionList.query.size +
+                        (getRoleList.query.page - 1) * getRoleList.query.size +
                         i +
                         1
                       }}
@@ -82,7 +82,7 @@
 
                   <td class="whitespace-nowrap">
                     <div class="flex justify-start items-center text-sm px-5">
-                      {{ items.Group }}
+                      {{ items.Description }}
                     </div>
                   </td>
 
@@ -93,7 +93,7 @@
                       >
                         <input
                           @click.prevent="toggleStatus(items)"
-                          v-model="items.IsActive"
+                          v-model="items.IsActived"
                           type="checkbox"
                           class="sr-only peer"
                         />
@@ -106,11 +106,35 @@
 
                   <td class="whitespace-nowrap">
                     <div class="flex justify-center items-center gap-5 text-sm">
+                      <nuxt-link
+                        :to="{
+                          path: `role/${items.ID}`,
+                          query: { name: items.Name },
+                        }"
+                      >
+                        <Icon
+                          name="solar:key-minimalistic-square-3-bold"
+                          class="text-gray-300 text-xl hover:text-green-500 cursor-pointer"
+                        />
+                      </nuxt-link>
+                    </div>
+                  </td>
+
+                  <td class="whitespace-nowrap">
+                    <div class="flex justify-center items-center gap-5 text-sm">
                       <div>
                         <Icon
                           @click="openModal(items)"
                           name="material-symbols-light:edit-square"
                           class="text-gray-300 text-xl hover:text-yellow-500 cursor-pointer"
+                        />
+                      </div>
+
+                      <div>
+                        <Icon
+                          @click="deleteEmployee(items.ID)"
+                          class="text-gray-300 text-xl hover:text-red-500 cursor-pointer"
+                          name="material-symbols:delete"
                         />
                       </div>
                     </div>
@@ -121,32 +145,28 @@
           </div>
         </div>
         <Pagination
-          :data="getPermissionList.paginate"
+          :data="getRoleList.paginate"
           @setPage="setQueryText('page', $event)"
           @setLimit="setQueryText('limit', $event)"
-          @reload="getPermissionLists()"
+          @reload="getRoleLists()"
         />
       </div>
     </div>
   </div>
 
   <div v-if="modal.show">
-    <ModalUpdatePermission
+    <ModalUpdateRole
       :show="modal.show"
       :datas="modal.data"
       @close="closeModal"
-      @reload="getPermissionLists"
+      @reload="getRoleLists"
     />
   </div>
 </template>
 
 <script setup lang="ts">
 import type { ModalDefault } from '~/models/global.model'
-import type {
-  GetPermissionList,
-  PermissionList,
-} from '~/models/permission.model'
-import Swal from 'sweetalert2/dist/sweetalert2.js'
+import type { GetRoleList, RoleList } from '~/models/role.model'
 import service from '~/service'
 import { useIndexStore } from '~/store/main'
 
@@ -163,7 +183,7 @@ const modal = ref<ModalDefault>({
   data: null,
 })
 
-const getPermissionList = ref<GetPermissionList>({
+const getRoleList = ref<GetRoleList>({
   datas: [],
   query: {
     page: 1,
@@ -174,40 +194,38 @@ const getPermissionList = ref<GetPermissionList>({
   paginate: null,
 })
 
-const getPermissionLists = async () => {
-  getPermissionList.value.loading = true
+const getRoleLists = async () => {
+  getRoleList.value.loading = true
 
-  await service.permission
-    .getPermissionList(getPermissionList.value.query)
+  await service.role
+    .getRoleList(getRoleList.value.query)
     .then((resp: any) => {
       const { data } = resp
-      console.log(data)
-      getPermissionList.value.datas = data.data.map((e: PermissionList) => ({
-        Id: e.Id,
-        IsActive: e.IsActive,
+      getRoleList.value.datas = data.data.map((e: RoleList) => ({
+        ID: e.ID,
         Name: e.Name,
-        Group: e.Group,
         Description: e.Description,
+        IsActived: e.IsActived,
       }))
 
-      // getPermissionList.value.datas = datas
-      getPermissionList.value.paginate = data.paginate
+      // getRoleList.value.datas = datas
+      getRoleList.value.paginate = data.paginate
     })
     .catch((err: any) => {
       errorResp(err.response)
     })
     .finally(() => {
-      getPermissionList.value.loading = false
+      getRoleList.value.loading = false
     })
 }
 
 const setQueryText = (prefix: any, event: any) => {
   switch (prefix) {
     case 'page':
-      getPermissionList.value.query.page = event
+      getRoleList.value.query.page = event
       break
     case 'limit':
-      getPermissionList.value.query.size = event
+      getRoleList.value.query.size = event
       break
     default:
       break
@@ -222,7 +240,7 @@ const searchText = () => {
   }
   timer = setTimeout(() => {
     loadingSearch.value = false
-    getPermissionLists()
+    getRoleLists()
   }, 1000)
 }
 
@@ -235,9 +253,31 @@ const closeModal = async () => {
   modal.value.show = false
 }
 
+const deleteEmployee = (id: string) => {
+  showAlertConfirmDelete({
+    icon: 'warning',
+    title: 'ยืนยันการลบ',
+    text: 'ต้องการลบหรือไม่ ?',
+  }).then(async (isConfirm) => {
+    if (!isConfirm) return
+    try {
+      const resps = await service.role.deleteRole(id)
+      if (resps.data.code === 200) {
+        swalToast({
+          icon: 'success',
+          title: 'ลบสำเร็จ!',
+        })
+        getRoleLists()
+      }
+    } catch (error: any) {
+      errorResp(error.response)
+    }
+  })
+}
+
 const toggleStatus = async (items: any) => {
   let text = ''
-  if (!items.IsActive === true) {
+  if (!items.IsActived === true) {
     text = 'เปิดการใช้งาน'
   } else {
     text = 'ปิดการใช้งาน'
@@ -249,9 +289,9 @@ const toggleStatus = async (items: any) => {
     text: `ต้องการ${text}ใช่หรือไม่?`,
   }).then(async (ok: any) => {
     if (ok) {
-      getPermissionList.value.loading = true
-      await service.permission
-        .updateStatusPermissison(items.Id, !items.IsActive)
+      getRoleList.value.loading = true
+      await service.role
+        .updateStatusRole(items.ID, !items.IsActived)
         .then((resp: any) => {
           const { data } = resp.data
           if (data) {
@@ -259,29 +299,21 @@ const toggleStatus = async (items: any) => {
               icon: 'success',
               title: 'Saved!',
             })
-            getPermissionLists()
+            getRoleLists()
           }
         })
         .catch((err: any) => {
           errorResp(err.response)
         })
         .finally(() => {
-          getPermissionList.value.loading = false
+          getRoleList.value.loading = false
         })
-    } else {
-      for (let i = 0; i < getPermissionList.value.datas.length; i++) {
-        const e = getPermissionList.value.datas[i]
-        if (e.Id === items.id) {
-          e.IsActive = !e.IsActive
-          break
-        }
-      }
     }
   })
 }
 
 onMounted(async () => {
-  await getPermissionLists()
+  await getRoleLists()
 })
 </script>
 
