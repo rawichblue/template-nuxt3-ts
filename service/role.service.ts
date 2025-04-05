@@ -20,7 +20,7 @@ export const setPermission = (payload: SetPermission) => {
   return client({
     url: 'md/role/set-permission',
     method: 'post',
-    params: {
+    data: {
       ...payload,
     },
   })
@@ -69,7 +69,7 @@ export const deleteRole = (id: string) => {
 
 export const updateStatusRole = (id: string, IsActive: boolean) => {
   return client({
-    url: `/md/role/change-status/${id}`,
+    url: `/md/role/toggle-status/${id}`,
     method: 'patch',
     data: {
       is_active: IsActive,

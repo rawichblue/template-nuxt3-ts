@@ -23,6 +23,7 @@ export interface QueryPermissionList {
   page: number
   size: number
   search: string
+  is_active: boolean
 }
 
 export interface CreatePermission {
