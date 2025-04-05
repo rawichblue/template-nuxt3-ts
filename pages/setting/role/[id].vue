@@ -16,6 +16,7 @@
     </div>
 
     <div class="bg-secondary p-2 rounded-md mt-5 overflow-auto">
+      <!-- <pre>{{ formUpdate }}</pre> -->
       <div class="flex justify-end pe-5 pt-3">
         <button
           v-if="
@@ -50,12 +51,12 @@
                 </tr>
               </thead>
 
-              <tbody class="mb-2">
-                <tr
-                  v-for="(permission, i) in getPermissionLists.datas"
-                  :key="i"
-                  class="border-b"
-                >
+              <tbody
+                v-for="(permission, i) in getPermissionLists.datas"
+                :key="i"
+                class="mb-2"
+              >
+                <tr class="border-b">
                   <td>
                     <span class="ms-2">{{ permission.Name }}</span>
                   </td>
@@ -114,7 +115,7 @@ const pathID = ref<any>(route.params?.id)
 const RoleName = ref<any>(route.query?.name)
 
 const formUpdate = ref<SetPermission>({
-  role_id: '',
+  role_id: null,
   permission_ids: [],
 })
 
@@ -124,6 +125,7 @@ const getPermissionLists = ref<GetPermissionList>({
     page: 1,
     size: 999,
     search: '',
+    is_active: true,
   },
   loading: false,
   paginate: null,
@@ -149,7 +151,6 @@ const getPermissionByRole = async (roleId: string) => {
     .getPermissionByRoleId(roleId)
     .then((resp: any) => {
       const { data } = resp.data
-      console.log(data)
       if (data) {
         formUpdate.value.permission_ids = data
       } else {
@@ -192,29 +193,29 @@ const getPermissionList = async () => {
 }
 
 const onSubmit = async () => {
-  // showAlertConfirm({
-  //   icon: 'warning',
-  //   title: 'ยืนยันการตั้งค่าทั้งหมด',
-  //   text: 'ต้องการบันทึกการตั้งค่าทั้งหมดใช่หรือไม่?',
-  // }).then(async (isConfirm) => {
-  //   if (!isConfirm) return
-  //   try {
-  //     loading.value = true
-  //     const resps = await service.role.setPermissionBots(formUpdate.value)
-  //     const { code } = resps.data
-  //     if (code === '200') {
-  //       swalToast({
-  //         icon: 'success',
-  //         title: 'Saved!',
-  //       })
-  //     }
-  //     router.push('/setting/role')
-  //     loading.value = false
-  //   } catch (error: any) {
-  //     loading.value = false
-  //     errorResp(error.response)
-  //   }
-  // })
+  showAlertConfirm({
+    icon: 'warning',
+    title: 'ยืนยันการตั้งค่าทั้งหมด',
+    text: 'ต้องการบันทึกการตั้งค่าทั้งหมดใช่หรือไม่?',
+  }).then(async (isConfirm) => {
+    if (!isConfirm) return
+    try {
+      loading.value = true
+      const resps = await service.role.setPermission(formUpdate.value)
+      const { code } = resps.data
+      if (code === '200') {
+        swalToast({
+          icon: 'success',
+          title: 'Saved!',
+        })
+      }
+      router.push('/setting/role')
+      loading.value = false
+    } catch (error: any) {
+      loading.value = false
+      errorResp(error.response)
+    }
+  })
 }
 
 const selectAllPermissions = () => {
@@ -231,7 +232,7 @@ onMounted(async () => {
   await getPermissionByRole(pathID.value)
   await getPermissionList()
 
-  formUpdate.value.role_id = pathID.value
+  formUpdate.value.role_id = parseInt(pathID.value)
 })
 </script>
 

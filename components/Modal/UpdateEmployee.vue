@@ -11,7 +11,7 @@
           class="rounded-md bg-secondary max-sm:w-[90%] w-[70%] z-40 px-4 py-2 overflow-auto mini-scroll max-h-[550px]"
         >
           <div class="flex justify-between items-center me-2 pt-1">
-            <div class="font-bold text-lg">Add Employee</div>
+            <div class="font-bold text-lg">{{ props.title }} Employee</div>
             <button @click="hide">
               <i class="fa-solid fa-xmark text-xl" />
             </button>
@@ -62,9 +62,9 @@
                   <option
                     v-for="(r, i) in getRoleList.datas"
                     :key="i"
-                    :value="r.ID"
+                    :value="r.id"
                   >
-                    {{ r.Name }}
+                    {{ r.name }}
                   </option>
                 </select>
               </div>
@@ -141,6 +141,7 @@ import service from '~/service'
 const props = defineProps<{
   show: boolean
   datas: any
+  title: string
 }>()
 
 const formData: FormData = new FormData()
@@ -196,10 +197,10 @@ const getRoleLists = async () => {
       const { data, paginate } = resp.data
 
       getRoleList.value.datas = data.map((e: RoleList) => ({
-        ID: e.ID,
-        Name: e.Name,
-        Description: e.Description,
-        IsActived: e.IsActived,
+        id: e.id,
+        name: e.name,
+        description: e.description,
+        is_active: e.is_active,
       }))
 
       // getRoleList.value.datas = datas

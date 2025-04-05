@@ -11,7 +11,7 @@ export default {
       title: 'สร้างบัญชี',
     },
     employee: {
-      title: 'หนักงาน',
+      title: 'พนักงาน',
     },
     role: {
       title: 'บทบาท',

@@ -10,6 +10,7 @@
         <div
           class="rounded-md bg-secondary max-sm:w-[90%] w-[70%] z-40 px-4 py-2 overflow-auto max-h-[550px]"
         >
+          <!-- <pre>{{ props.datas }}</pre> -->
           <div class="flex justify-between items-center me-2 pt-1">
             <div class="font-bold text-lg" v-if="props.datas.ID">
               Update Role
@@ -51,7 +52,7 @@
                 class="relative inline-flex justify-center items-center cursor-pointer"
               >
                 <input
-                  v-model="formUpdateRole.is_actived"
+                  v-model="formUpdateRole.is_active"
                   type="checkbox"
                   class="sr-only peer"
                 />
@@ -61,7 +62,7 @@
               </label>
             </div>
             <div>
-              <input v-model="formUpdateRole.is_actived" class="sr-only peer" />
+              <input v-model="formUpdateRole.is_active" class="sr-only peer" />
             </div>
 
             <div class="flex justify-end gap-2 mt-5 mb-2 pl-5">
@@ -95,7 +96,7 @@ const loading = ref<boolean>(false)
 const formUpdateRole = ref<CreateUpdateRole>({
   name: '',
   description: '',
-  is_actived: false,
+  is_active: false,
 })
 
 const hide = () => {
@@ -103,9 +104,7 @@ const hide = () => {
 }
 
 const onSubmit = async () => {
-  // if (!validateForm()) return
-
-  if (props.datas.ID) {
+  if (props.datas.id) {
     showAlertConfirm({
       icon: 'warning',
       title: 'ยืนยันการ update Role',
@@ -114,9 +113,9 @@ const onSubmit = async () => {
       if (!isConfirm) return
       loading.value = true
       await service.role
-        .updateRole(props.datas.ID, formUpdateRole.value)
+        .updateRole(props.datas.id, formUpdateRole.value)
         .then((resp: any) => {
-          if (resp.data.code === 200) {
+          if (resp.status === 200) {
             swalToast({
               icon: 'success',
               title: 'Saved!',
@@ -143,7 +142,8 @@ const onSubmit = async () => {
       await service.role
         .createRole(formUpdateRole.value)
         .then((resp: any) => {
-          if (resp.data.code === 200) {
+          console.log(resp.status)
+          if (resp.status === 200) {
             swalToast({
               icon: 'success',
               title: 'Saved!',
@@ -164,9 +164,9 @@ const onSubmit = async () => {
 
 const checkData = async () => {
   if (props.datas) {
-    formUpdateRole.value.name = props.datas.Name
-    formUpdateRole.value.description = props.datas.Description
-    formUpdateRole.value.is_actived = props.datas.IsActived
+    formUpdateRole.value.name = props.datas.name
+    formUpdateRole.value.description = props.datas.description
+    formUpdateRole.value.is_active = props.datas.is_active
   }
 }
 
